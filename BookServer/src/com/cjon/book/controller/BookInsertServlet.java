@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.cjon.book.service.BookService;
 
-@WebServlet("/bookUpdate")
-public class BookUpdateServlet extends HttpServlet {
+@WebServlet("/bookInsert")
+public class BookInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    public BookUpdateServlet() {
+    public BookInsertServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -23,6 +23,7 @@ public class BookUpdateServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String isbn = request.getParameter("isbn");
+		String img = request.getParameter("img");
 		String title = request.getParameter("title");
 		String author = request.getParameter("author");
 		String price = request.getParameter("price");
@@ -30,7 +31,7 @@ public class BookUpdateServlet extends HttpServlet {
 		
 		// 로직 처리는 Service 객체 담당
 		BookService service = new BookService();
-		boolean result = service.updateBook(isbn, title, author, price);
+		boolean result = service.insertBook(isbn, img, title, author, price);
 		
 		response.setContentType("text/plain; charset=utf8");
 		

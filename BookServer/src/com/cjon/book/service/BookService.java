@@ -12,10 +12,34 @@ public class BookService {
 		return result;
 	}
 
-	public boolean updateBook(String isbn, String price) {
+	public boolean updateBook(String isbn, String title, String author, String price) {
 		
 		bookDAO dao = new bookDAO();
-		boolean result = dao.update(isbn, price);
+		boolean result = dao.update(isbn, title, author, price);
+		
+		return result;
+	}
+
+	public boolean insertBook(String isbn, String img,  String title, String author, String price) {
+
+		bookDAO dao = new bookDAO();
+		boolean result = dao.insert(isbn, img, title, author, price);
+		
+		return result;
+	}
+
+	public boolean deleteBook(String isbn) {
+
+		bookDAO dao = new bookDAO();
+		boolean result = dao.insert(isbn);
+		
+		return result;
+	}
+
+	public String getListDetail(String isbn) {
+
+		bookDAO dao = new bookDAO();
+		String result = dao.selectDetail(isbn);
 		
 		return result;
 	}
