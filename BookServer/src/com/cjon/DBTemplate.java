@@ -1,4 +1,4 @@
-package com.cjon.book.common;
+package com.cjon;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

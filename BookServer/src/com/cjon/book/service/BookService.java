@@ -31,7 +31,7 @@ public class BookService {
 	public boolean deleteBook(String isbn) {
 
 		bookDAO dao = new bookDAO();
-		boolean result = dao.insert(isbn);
+		boolean result = dao.delete(isbn);
 		
 		return result;
 	}

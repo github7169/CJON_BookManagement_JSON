@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.cjon.book.common.DBTemplate;
+import com.cjon.DBTemplate;
 
 public class bookDAO {
 
@@ -112,7 +112,7 @@ public class bookDAO {
 		return result;		
 	}
 
-	public boolean insert(String isbn) {
+	public boolean delete(String isbn) {
 		
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt = null;
