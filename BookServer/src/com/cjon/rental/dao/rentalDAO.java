@@ -1,4 +1,4 @@
-package com.cjon.review.dao;
+package com.cjon.rental.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,9 +9,9 @@ import org.json.simple.JSONObject;
 
 import com.cjon.DBTemplate;
 
-public class reviewDAO {
-
-	public String select(String isbn) {
+public class rentalDAO {
+/*
+	public String select(String keyword) {
 
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt = null;
@@ -19,20 +19,19 @@ public class reviewDAO {
 		String result = null;
 		
 		try {
-			String sql = "select  member.memail, mname, rgrade, rcontent, rdate, review.seq from member, review where bisbn = ? and member.memail = review.memail order by rgrade desc";
+			String sql = "select bisbn, bimgbase64, btitle, bauthor, bprice from book where btitle like ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, isbn);
+			pstmt.setString(1, "%"+keyword+"%");
 			rs = pstmt.executeQuery();
 			
 			JSONArray arr = new JSONArray();
 			while(rs.next()){
 				JSONObject obj = new JSONObject();
-				obj.put("name", rs.getString("mname"));
-				obj.put("email", rs.getString("member.memail"));
-				obj.put("grade", rs.getString("rgrade"));
-				obj.put("content", rs.getString("rcontent"));
-				obj.put("date", rs.getString("rdate"));
-				obj.put("no", rs.getString("review.seq"));
+				obj.put("isbn", rs.getString("bisbn"));
+				obj.put("img", rs.getString("bimgbase64"));
+				obj.put("title", rs.getString("btitle"));
+				obj.put("author", rs.getString("bauthor"));
+				obj.put("price", rs.getString("bprice"));
 				arr.add(obj);
 			}
 			result = arr.toJSONString();
@@ -48,17 +47,20 @@ public class reviewDAO {
 		return result;
 	}
 
-	public boolean delete(String seq) {
-		
+	public boolean update(String isbn, String title, String author, String price) {
+
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt = null;
 		boolean result = false;
 		
 		try {
-			String sql = "delete from review where seq = ?";
+			String sql = "update book set btitle = ?, bauthor = ?, bprice = ? where bisbn = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, seq);
-			int count = pstmt.executeUpdate();	// delete 개수
+			pstmt.setString(1, title);
+			pstmt.setString(2, author);
+			pstmt.setInt(3, Integer.parseInt(price));
+			pstmt.setString(4, isbn);
+			int count = pstmt.executeUpdate();	// update 개수
 		
 			if( count == 1 ) {
 				result = true;
@@ -77,19 +79,20 @@ public class reviewDAO {
 		return result;
 	}
 
-	public boolean insert(String grade, String content, String email, String isbn) {
+	public boolean insert(String isbn, String img, String title, String author, String price) {
 
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt = null;
 		boolean result = false;
 		
 		try {
-			String sql = "insert into review (rgrade, rcontent, rdate, memail, bisbn) values (?,?,now(),?,?)";
+			String sql = "insert into book (bisbn, bimgbase64, btitle, bauthor, bprice) values (?,?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, grade);
-			pstmt.setString(2, content);
-			pstmt.setString(3, email);
-			pstmt.setString(4, isbn);
+			pstmt.setString(1, isbn);
+			pstmt.setString(2, img);
+			pstmt.setString(3, title);
+			pstmt.setString(4, author);
+			pstmt.setInt(5, Integer.parseInt(price));
 			int count = pstmt.executeUpdate();	// insert 개수
 		
 			if( count == 1 ) {
@@ -108,33 +111,28 @@ public class reviewDAO {
 
 		return result;		
 	}
+*/
 
-	public String selectKeyword(String keyword) {
+	public boolean selectStatus(String isbn) {
 
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String result = null;
+		boolean result = false;
 		
 		try {
-			String sql = "select btitle, member.mname, review.memail, rgrade, rcontent, rdate from review, book, member "
-						+ "where rcontent like ? and review.bisbn = book.bisbn and review.memail = member.memail;";
+			String sql = "select rstatus from rental where bisbn = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, "%"+keyword+"%");
+			pstmt.setString(1, isbn);
 			rs = pstmt.executeQuery();
 			
-			JSONArray arr = new JSONArray();
-			while(rs.next()){
-				JSONObject obj = new JSONObject();
-				obj.put("title", rs.getString("btitle"));
-				obj.put("name", rs.getString("member.mname"));
-				obj.put("email", rs.getString("review.memail"));
-				obj.put("grade", rs.getString("rgrade"));
-				obj.put("content", rs.getString("rcontent"));
-				obj.put("date", rs.getString("rdate"));
-				arr.add(obj);
+			// 빌린 상태가 아예 없거나 반납된 상태여야 대여가능함
+			if(rs.next()){
+				if ( rs.getString("rstatus") == "return" ){
+					
+				}
+				
 			}
-			result = arr.toJSONString();
 		
 		} catch (Exception e) {
 			System.out.println(e);
@@ -145,6 +143,6 @@ public class reviewDAO {
 		}
 
 		return result;
-	}
-
+		
+	}	
 }
