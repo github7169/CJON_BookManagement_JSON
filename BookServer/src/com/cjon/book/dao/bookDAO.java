@@ -19,7 +19,9 @@ public class bookDAO {
 		String result = null;
 		
 		try {
-			String sql = "select bisbn, bimgbase64, btitle, bauthor, bprice from book where btitle like ?";
+			
+			String sql = "select book.bisbn, bimgbase64, btitle, bauthor, bprice, rstatus, rental.memail " 
+						+ "from book left outer join rental on book.bisbn = rental.bisbn where book.btitle like ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, "%"+keyword+"%");
 			rs = pstmt.executeQuery();
@@ -32,6 +34,8 @@ public class bookDAO {
 				obj.put("title", rs.getString("btitle"));
 				obj.put("author", rs.getString("bauthor"));
 				obj.put("price", rs.getString("bprice"));
+				obj.put("status", rs.getString("rstatus"));
+				obj.put("email", rs.getString("rental.memail"));
 				arr.add(obj);
 			}
 			result = arr.toJSONString();

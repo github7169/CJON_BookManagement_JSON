@@ -144,7 +144,7 @@ public class rentalDAO {
 		String result = null;
 		
 		try {
-			String sql = "select bimgbase64, btitle, bauthor, rstatus, rental.memail from book left outer join rental on book.bisbn = rental.bisbn and btitle like '%브랜드%'";
+			String sql = "select bimgbase64, btitle, bauthor, rstatus, rental.memail from book left outer join rental on book.bisbn = rental.bisbn where book.btitle like ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, "%"+keyword+"%");
 			rs = pstmt.executeQuery();
@@ -155,10 +155,13 @@ public class rentalDAO {
 				obj.put("img", rs.getString("bimgbase64"));
 				obj.put("title", rs.getString("btitle"));
 				obj.put("author", rs.getString("bauthor"));
+				obj.put("status", rs.getString("rstatus"));
 				obj.put("email", rs.getString("rental.memail"));
 				arr.add(obj);
 			}
 			result = arr.toJSONString();
+			
+			System.out.println(result);
 		
 		} catch (Exception e) {
 			System.out.println(e);
